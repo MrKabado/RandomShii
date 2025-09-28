@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import ProductCard from '../components/ProductCard'
 import Pagination from '../components/Pagination'
+import Alert from '../components/modal/Alert'
 
 const Homepage = () => {
   const [products, setProducts] = useState([]);
@@ -15,6 +16,8 @@ const Homepage = () => {
   const [sortOrder, setSortOrder] = useState("random");
 
   const [addedCarts, setAddedCarts] = useState(0);
+  const [modal, setModal] = useState(false);
+  const [modalItem, setModalItem] = useState("");
 
   
   //for getting the data
@@ -33,7 +36,7 @@ const Homepage = () => {
 
   const filteredProducts = products
     //search by product title and brand
-    .filter(product => searchProduct ? 
+    .filter(product => searchProduct ?  
       product.title?.toLowerCase().includes(searchProduct.toLowerCase()) ||
       product.brand?.toLowerCase().includes(searchProduct.toLowerCase())
       : true)
@@ -55,8 +58,6 @@ const Homepage = () => {
   const firstPostIndex = lastPostIndex - postPerPage;
   const currentPost = filteredProducts.slice(firstPostIndex, lastPostIndex);
 
-
-
   return (
     <>
     <Navbar 
@@ -69,7 +70,7 @@ const Homepage = () => {
     <div className='p-5 lg:px-20 flex flex-col gap-10 items-center'>
       
       {/* CATEGORY */}
-      <div className='flex flex-col sm:flex-row justify-between border rounded-md p-2 gap-2 w-full'>
+      <div className='flex flex-col sm:flex-row justify-between shadow-[0_0_3px_0_gray] rounded-md p-2 gap-2 w-full'>
         <div className='w-fit flex gap-3'>
           <label htmlFor="item-category">Category</label>
           <select 
@@ -137,11 +138,15 @@ const Homepage = () => {
                 key={product.id}
                 image={product.images[0]}
                 title={product.title}
+                brand={product.brand}
                 price={`$${product.price}`}
+                discountedPrice={`$${(product.price - (product.price * (product.discountPercentage / 100))).toFixed(2)}`}
                 stocks={product.stock}
                 rating={product.rating}
                 productOnClick={() => {
                   setAddedCarts(prev => prev + 1);
+                  setModal(true);
+                  setModalItem(product.title)
                 }}
               />
             ))
@@ -157,8 +162,15 @@ const Homepage = () => {
           setCurrentPage={setCurrentPage}
         />
       </div>
-
     </div>
+
+    {
+      modal && 
+        <Alert
+          alertText={modalItem}
+          modalBtnOnClick={() => setModal(!modal)}
+        />
+    }
     </>
   )
 }
