@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Pagination = ({totalPosts, postPerPage, setCurrentPage}) => {
+const Pagination = ({totalPosts, postPerPage, setCurrentPage, pageOnClick}) => {
   let pages = [];
   
   for (let i = 1; i <= Math.ceil(totalPosts/postPerPage); i++) {
@@ -18,6 +18,7 @@ const Pagination = ({totalPosts, postPerPage, setCurrentPage}) => {
               className={`border-2 border-black px-3 py-1 rounded-md cursor-pointer transition-transform hover:bg-black hover:text-white
               ${active === index ? "bg-black text-white" : "bg-white text-black"}`}
               onClick={() => {
+                {pageOnClick}
                 setCurrentPage(page);
                 setActive(index);
               }}

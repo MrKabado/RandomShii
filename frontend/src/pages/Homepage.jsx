@@ -58,6 +58,16 @@ const Homepage = () => {
   const firstPostIndex = lastPostIndex - postPerPage;
   const currentPost = filteredProducts.slice(firstPostIndex, lastPostIndex);
 
+
+  const handleAddToCart = (item) => {
+    setAddedCarts(prev => prev + 1);
+    setModalItem(item);
+    setModal(true);
+    setTimeout(() => {
+      setModal(false);
+    }, 2000);
+  };
+
   return (
     <>
     <Navbar 
@@ -70,7 +80,7 @@ const Homepage = () => {
     <div className='p-5 lg:px-20 flex flex-col gap-10 items-center'>
       
       {/* CATEGORY */}
-      <div className='flex flex-col sm:flex-row justify-between shadow-[0_0_3px_0_gray] rounded-md p-2 gap-2 w-full'>
+      <div className='flex flex-col sm:flex-row justify-between shadow-[0_0_3px_0_gray] rounded-md p-2 gap-2 w-full text-xs md:text-sm'>
         <div className='w-fit flex gap-3'>
           <label htmlFor="item-category">Category</label>
           <select 
@@ -144,9 +154,7 @@ const Homepage = () => {
                 stocks={product.stock}
                 rating={product.rating}
                 productOnClick={() => {
-                  setAddedCarts(prev => prev + 1);
-                  setModal(true);
-                  setModalItem(product.title)
+                  handleAddToCart(product.title);
                 }}
               />
             ))
@@ -160,16 +168,17 @@ const Homepage = () => {
           totalPosts={filteredProducts.length}
           postPerPage={postPerPage}
           setCurrentPage={setCurrentPage}
+          pageOnClick={() => window.scrollTo({top: 0, behavior: "smooth"})}
         />
       </div>
     </div>
 
     {
       modal && 
-        <Alert
-          alertText={modalItem}
-          modalBtnOnClick={() => setModal(!modal)}
-        />
+      <Alert
+        alertText={modalItem}
+        modalBtnOnClick={() => setModal(!modal)}
+      />
     }
     </>
   )
