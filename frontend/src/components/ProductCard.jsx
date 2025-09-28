@@ -16,13 +16,20 @@ const ProductCard = (props) => {
           <p>{props.price}</p>
         </div>
         <div className='flex justify-between text-sm font-semibold'>
+          <p>Stocks:</p>
+          <p className={`${props.stocks <= 10 ? "text-red-600" : "text-black"}`}>
+            {props.stocks}
+          </p>
+        </div>
+        <div className='flex justify-between text-sm font-semibold'>
           <p>Rating:</p>
           <p>{props.rating}</p>
         </div>
       </div>
 
       <button 
-        className='border w-full p-1 rounded-md bg-black text-white text-sm'
+        className='border w-full p-1 rounded-md bg-black text-white text-sm hover:scale-[1.02] transition cursor-pointer'
+        onClick={props.productOnClick}
       >      
         Add to cart
       </button>

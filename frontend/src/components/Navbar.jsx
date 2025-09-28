@@ -1,18 +1,22 @@
 import React from 'react'
 import SearchBar from './SearchBar'
-import { ShoppingCartIcon } from '@heroicons/react/24/outline'
+import ShoppingCart from './ShoppingCart'
 
-const Navbar = () => {
+const Navbar = ({searchBarValue, searchBarOnchange, badgeCL, carts}) => {
   return (
-    <header className='flex justify-between px-5 py-3 items-center shadow-[0_0_3px_0_gray]'>
-      <h1 className='text-xl font-semibold'>
+    <header className='flex justify-between px-5 py-3 items-center shadow-[0_0_3px_0_gray] lg:px-20'>
+      <h1 className='text-xl font-semibold sm:text-red-600 md:text-blue-600 lg:text-green-600'>
         RandomShii
       </h1>
       
-      <SearchBar />
+      <SearchBar 
+        value={searchBarValue}
+        onChange={searchBarOnchange}
+      />
 
-      <ShoppingCartIcon 
-        className='w-6'
+      <ShoppingCart 
+        badgeCL={badgeCL}
+        carts={carts}
       />
     </header>
   )
