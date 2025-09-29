@@ -4,44 +4,49 @@ import { XMarkIcon, ShoppingCartIcon } from "@heroicons/react/24/solid";
 const CartList = (props) => {
   return (
     <>
-    <div className="fixed top-32 left-1/2 transform -translate-x-1/2 bg-white px-6 py-4 rounded-lg shadow-lg flex flex-col items-center w-[350px] sm:w-[550px] h-[400px]">
-      <div className='flex justify-between w-full'>
+      {/* Backdrop */}
+      <div className="fixed inset-0 backdrop-blur-xs bg-opacity-50 z-40"></div>
 
-        <div className="relative inline-block">
-          <ShoppingCartIcon className="h-6 w-6 mr-2 text-black" />
+      {/* Modal */}
+      <div className="fixed top-32 left-1/2 transform -translate-x-1/2 bg-white px-6 py-4 rounded-lg shadow-[0_0_3px_0_gray] flex flex-col items-center w-[350px] sm:w-[550px] h-[400px] z-50">
+        <div className='flex justify-between w-full'>
+          {/* Cart icon with badge */}
+          <div className="relative inline-block">
+            <ShoppingCartIcon className="h-6 w-6 mr-2 text-black" />
+            <span className={`absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full ${props.badgeCL}`}>
+              {props.carts}
+            </span>
+          </div>
 
-          <span className={`absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full ${props.badgeCL}`}>
-            {props.carts}
-          </span>
+          <div className="flex items-center">        
+            <p className='text-black flex gap-2 text-xs md:text-sm font-semibold'>Your Cart</p>
+          </div>
+
+          <button className='ml-2'>
+            <XMarkIcon 
+              className="h-6 w-6 text-black hover:text-gray-500 cursor-pointer"
+              onClick={props.cartListOnClickBtn}
+            />
+          </button>
         </div>
-        
-        <div className="flex items-center">        
-          <p className='text-black flex gap-2 text-xs md:text-sm font-semibold'>Your Cart</p>
+
+        {/* Item list */}
+        <div className='overflow-y-scroll w-full h-full m-2 p-2 flex flex-col'>
+          {props.itemList}
         </div>
 
-        <button className='ml-2'>
-          <XMarkIcon 
-            className="h-6 w-6 text-black hover:text-gray-500 cursor-pointer"
-            onClick={props.cartListOnClickBtn}
-          />
-        </button>
-      </div>
+        {/* Footer */}
+        <div className='flex justify-between w-full px-4 items-center'>
+          {props.totalPrice}
 
-      <div className='overflow-y-scroll w-full h-full m-2 p-2 flex flex-col'>
-        {props.itemList}
+          <button 
+            className={`px-2 bg-black text-white rounded-sm cursor-pointer hover:bg-gray-700 w-30 ${props.cartListBtnCL}`}
+            onClick={props.checkOutBtnOnClick}
+          >
+            Check Out
+          </button>
+        </div>
       </div>
-
-      <div className='flex justify-between w-full px-4'>
-        {props.totalPrice}
-
-        <button 
-          className={`px-2 bg-black text-white rounded-sm cursor-pointer hover:bg-gray-700 w-30 ${props.cartListBtnCL}`}
-          onClick={props.checkOutBtnOnClick}
-        >
-          Check Out
-        </button>
-      </div>
-    </div>
     </>
   )
 }

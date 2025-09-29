@@ -4,8 +4,9 @@ import ProductCard from '../components/ProductCard'
 import Pagination from '../components/Pagination'
 import Alert from '../components/modal/Alert'
 import CartList from '../components/modal/CartList'
-import { MinusCircleIcon } from '@heroicons/react/24/solid'
-import Quantity from '../components/modal/Quantity'
+import { MinusCircleIcon, ExclamationCircleIcon, CheckCircleIcon } from '@heroicons/react/24/solid'
+import CheckOut from '../components/modal/CheckOut'
+import ReusableAlert from '../components/modal/ReusableAlert'
 
 const Homepage = () => {
   const [products, setProducts] = useState([]);
@@ -26,6 +27,16 @@ const Homepage = () => {
   const [itemQuantity, setItemQuantity] = useState([]);
   const [addedItemCarts, setAddedItemCarts] = useState([]); //holder for added items
   const [totalPrice, setTotalPrice] = useState(0);
+
+  const [openCheckOut, setOpenCheckOut] = useState(false);
+  const [openReusableAlert, setOpenReusableAlert] = useState(false);
+
+  const [name, setName] = useState("");
+  const [contactNo, setContactNo] = useState("");
+  const [address, setAddress] = useState("");
+
+  const [alertType, setAlertType] = useState("error");
+
 
   
   //for getting the data
@@ -95,6 +106,23 @@ const Homepage = () => {
   
       return updated;
     })
+  }
+
+  const handlePlaceOrder = () => {
+    if (name === "" || contactNo === "" || address === "") {
+      setAlertType("error");
+      setOpenReusableAlert(true);
+      setTimeout(() => {
+        setOpenReusableAlert(false);
+      }, 2000)
+      return;
+    }
+
+    setAddedItemCarts([]);
+    setAddedCarts(0);
+    setAlertType("success");
+    setOpenReusableAlert(true);
+    setOpenCheckOut(false);
   }
 
   return (
@@ -229,11 +257,15 @@ const Homepage = () => {
           addedItemCarts != 0 ? "block" : "hidden"
         }
         totalPrice = {
-          <div className='flex gap-2 font-semibold'>
+          <div className='flex gap-2 font-semibold text-xs md:text-sm lg:text-md'>
             <h1>Total Price: </h1>
             <p>${totalPrice.toFixed(2)}</p>
           </div>         
         }
+        checkOutBtnOnClick={() => {
+          setOpenCheckOut(true);
+          setOpenCartList(false);
+        }}
 
         itemList={addedItemCarts.map((items, index) => (
           <div key={index}>
@@ -253,6 +285,92 @@ const Homepage = () => {
         ))}
       />
      }
+
+     {
+      openCheckOut &&
+      <CheckOut 
+        checkOutCloseBtnOnClick={() => setOpenCheckOut(false)}
+        totalPrice = {
+          <div className='flex gap-2 font-semibold text-xs md:text-sm lg:text-md'>
+            <h1>Total Price: </h1>
+            <p>${totalPrice.toFixed(2)}</p>
+          </div>         
+        }
+        checkOutBody={
+          <div className='flex flex-col'>
+            <form>
+              <h1 className='text-center text-red-500'>Fill Up Personal Info</h1>
+
+              <div className='text-sm flex gap-3 items-center'>
+                <label htmlFor="">Name: </label>
+                <input 
+                  type="text" 
+                  placeholder='ex. John Doe'
+                  className='px-2 py-1 outline-none text-sm text-md w-30 lg:w-75'
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+
+              <div className='text-sm flex gap-3 items-center'>
+                <label htmlFor="">Contact No: </label>
+                <input 
+                  type="text" 
+                  placeholder='ex. 09123456789'
+                  className='px-2 py-1 outline-none text-sm text-md w-30 lg:w-75'
+                  value={contactNo}
+                  onChange={(e) => setContactNo(e.target.value)}
+                />
+              </div>
+
+              <div className='text-sm flex gap-3 items-center'>
+                <label htmlFor="">Complete Address: </label>
+                <input 
+                  type="text" 
+                  placeholder='(Street Name, Brgy, City, Province, Postal)'
+                  className='px-2 py-1 outline-none text-sm text-md w-30 lg:w-75'
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                />
+              </div>
+
+              <div className='flex flex-col justify-center my-2'>
+                <h1 className='text-center my-2 text-xs md:text-lg text-red-500'>Your Items</h1>
+                {
+                  addedItemCarts.map((items, index) => (
+                    <div key={index}>
+                      <div key={items.key} className='flex justify-between text-xs md:text-sm lg:text-md'>
+                        <div className='flex justify-between w-full pr-5'>
+                          <h1 className='font-semibold'>{items.title}</h1>
+                          <p className='font-semibold'>${items.price}</p>
+                        </div>
+                      </div>
+          
+                      <hr className='text-gray-300 my-1'/>
+                    </div>
+                  ))
+                }
+              </div>
+            </form>
+          </div>
+        }
+
+        placeOrderBtnOnClick={() => handlePlaceOrder()}
+      />
+     }
+
+     {
+      openReusableAlert &&
+      <ReusableAlert 
+        icon={
+          alertType === "error" ? <ExclamationCircleIcon className='w-6 text-[#FC8181]'/> : <CheckCircleIcon className='w-6 text-green-500'/>
+        }
+        className={alertType === "error" ? "z-[9999] bg-[#FFF5F5] border-[#FC8181] border-1" : "z-[9999] bg-green-100 border-green-300 border-1"}
+        alertText={alertType === "error" ? "Please fill out all required fields." : "Successfully Added"}
+        alertTextCL={alertType === "error" ? "text-[#D03030]" : "text-green-500"}
+      />
+     }
+
     </>
   )
 }
