@@ -4,7 +4,8 @@ import ProductCard from '../components/ProductCard'
 import Pagination from '../components/Pagination'
 import Alert from '../components/modal/Alert'
 import CartList from '../components/modal/CartList'
-import { H1Icon } from '@heroicons/react/24/outline'
+import { MinusCircleIcon } from '@heroicons/react/24/solid'
+import Quantity from '../components/modal/Quantity'
 
 const Homepage = () => {
   const [products, setProducts] = useState([]);
@@ -17,11 +18,12 @@ const Homepage = () => {
   const [maxPrice, setMaxPrice] = useState();
   const [sortOrder, setSortOrder] = useState("random");
 
-  const [addedCarts, setAddedCarts] = useState(0);
-  const [modal, setModal] = useState(false);
+  const [addedCarts, setAddedCarts] = useState(0); //counter for carts
+  const [modal, setModal] = useState(false); //for alert or cart
   const [modalItem, setModalItem] = useState("");
   const [openCartList, setOpenCartList] = useState(false);
 
+  const [itemQuantity, setItemQuantity] = useState([]);
   const [addedItemCarts, setAddedItemCarts] = useState([]); //holder for added items
 
   
@@ -75,9 +77,16 @@ const Homepage = () => {
 
     setAddedItemCarts((prev) => [...prev, {
       title: item.title,
-      price: item.price
+      price: item.price,
+      key: item.key,
     }]);
   };
+
+  const handleDeleteItemCarts = (indexToRemove) => {
+    setAddedCarts(prev => prev - 1);
+    setAddedItemCarts(prev => prev.filter((_, index) => index !== indexToRemove)
+    );
+  }
 
   return (
     <>
@@ -171,6 +180,8 @@ const Homepage = () => {
                   handleAddToCart({
                     title: product.title,
                     price: (product.price - (product.price * (product.discountPercentage / 100))).toFixed(2),
+                    key: product.id,
+                    stocks: product.stock,
                   });
                 }}
               />
@@ -201,13 +212,25 @@ const Homepage = () => {
 
      {
       openCartList &&
-      <CartList 
+      <CartList
+        badgeCL={addedCarts === 0 ? "hidden" : "block"}
+        carts={addedCarts}
         cartListOnClickBtn={() => setOpenCartList(false)}
+        cartListBtnCL={
+          addedItemCarts != 0 ? "block" : "hidden"
+        }
+
         itemList={addedItemCarts.map((items, index) => (
-          <div>
-            <div key={index} className='flex justify-between'>
-              <h1 className='font-semibold'>{items.title}</h1>
-              <p className='font-semibold'>${items.price}</p>
+          <div key={index}>
+            <div key={items.key} className='flex justify-between text-xs md:text-sm lg:text-md'>
+              <div className='flex justify-between w-full pr-5'>
+                <h1 className='font-semibold'>{items.title}</h1>
+                <p className='font-semibold'>${items.price}</p>
+              </div>
+              <MinusCircleIcon 
+                className='w-5 hover:text-gray-600 cursor-pointer'
+                onClick={() => handleDeleteItemCarts(index)}
+              />
             </div>
 
             <hr className='text-gray-300 my-1'/>

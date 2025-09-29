@@ -1,5 +1,5 @@
 import React from 'react'
-import { ShoppingCartIcon } from '@heroicons/react/24/outline'
+import { ShoppingCartIcon } from '@heroicons/react/24/solid'
 
 const ShoppingCart = ({carts, badgeCL, cartOnClick}) => {
   return (
@@ -7,7 +7,7 @@ const ShoppingCart = ({carts, badgeCL, cartOnClick}) => {
       <div className="relative inline-block">
         {/* The icon */}
         <ShoppingCartIcon 
-          className="w-8 h-8 text-gray-700 cursor-pointer hover:text-gray-500" 
+          className="w-8 h-8 text-black cursor-pointer hover:text-gray-700" 
           onClick={cartOnClick}
         />
 
