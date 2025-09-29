@@ -21,10 +21,11 @@ const Homepage = () => {
   const [addedCarts, setAddedCarts] = useState(0); //counter for carts
   const [modal, setModal] = useState(false); //for alert or cart
   const [modalItem, setModalItem] = useState("");
-  const [openCartList, setOpenCartList] = useState(false);
+  const [openCartList, setOpenCartList] = useState(false); //opening to CartList
 
   const [itemQuantity, setItemQuantity] = useState([]);
   const [addedItemCarts, setAddedItemCarts] = useState([]); //holder for added items
+  const [totalPrice, setTotalPrice] = useState(0);
 
   
   //for getting the data
@@ -70,6 +71,7 @@ const Homepage = () => {
     setAddedCarts(prev => prev + 1);
     setModalItem(item.title);
     setModal(true);
+    setTotalPrice(prev => prev + item.price);
 
     setTimeout(() => {
       setModal(false);
@@ -84,8 +86,15 @@ const Homepage = () => {
 
   const handleDeleteItemCarts = (indexToRemove) => {
     setAddedCarts(prev => prev - 1);
-    setAddedItemCarts(prev => prev.filter((_, index) => index !== indexToRemove)
-    );
+    setAddedItemCarts(prev => {
+      const updated = prev.filter((_, index) => index !== indexToRemove);
+  
+      // recalc total
+      const newTotal = updated.reduce((sum, item) => sum + item.price, 0);
+      setTotalPrice(parseFloat(newTotal.toFixed(2)));
+  
+      return updated;
+    })
   }
 
   return (
@@ -179,7 +188,7 @@ const Homepage = () => {
                 productOnClick={() => {
                   handleAddToCart({
                     title: product.title,
-                    price: (product.price - (product.price * (product.discountPercentage / 100))).toFixed(2),
+                    price: Number((product.price - (product.price * (product.discountPercentage / 100))).toFixed(2)),
                     key: product.id,
                     stocks: product.stock,
                   });
@@ -218,6 +227,12 @@ const Homepage = () => {
         cartListOnClickBtn={() => setOpenCartList(false)}
         cartListBtnCL={
           addedItemCarts != 0 ? "block" : "hidden"
+        }
+        totalPrice = {
+          <div className='flex gap-2 font-semibold'>
+            <h1>Total Price: </h1>
+            <p>${totalPrice.toFixed(2)}</p>
+          </div>         
         }
 
         itemList={addedItemCarts.map((items, index) => (

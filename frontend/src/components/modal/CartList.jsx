@@ -32,7 +32,7 @@ const CartList = (props) => {
       </div>
 
       <div className='flex justify-between w-full px-4'>
-        <h1>Total Price: </h1>
+        {props.totalPrice}
 
         <button 
           className={`px-2 bg-black text-white rounded-sm cursor-pointer hover:bg-gray-700 w-30 ${props.cartListBtnCL}`}
