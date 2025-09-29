@@ -2,7 +2,7 @@ import React from 'react'
 
 const ProductCard = (props) => {
   return (
-    <div className='flex flex-col justify-between shadow-[0_0_3px_0_gray] rounded-lg items-center p-4 gap-3'>
+    <div className='flex flex-col justify-between shadow-[0_0_2px_0_gray] rounded-lg items-center p-4 gap-3'>
       <img 
         src={props.image} 
         alt="Product1" 

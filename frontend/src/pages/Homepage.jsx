@@ -3,6 +3,8 @@ import Navbar from '../components/Navbar'
 import ProductCard from '../components/ProductCard'
 import Pagination from '../components/Pagination'
 import Alert from '../components/modal/Alert'
+import CartList from '../components/modal/CartList'
+import { H1Icon } from '@heroicons/react/24/outline'
 
 const Homepage = () => {
   const [products, setProducts] = useState([]);
@@ -18,6 +20,9 @@ const Homepage = () => {
   const [addedCarts, setAddedCarts] = useState(0);
   const [modal, setModal] = useState(false);
   const [modalItem, setModalItem] = useState("");
+  const [openCartList, setOpenCartList] = useState(false);
+
+  const [addedItemCarts, setAddedItemCarts] = useState([]); //holder for added items
 
   
   //for getting the data
@@ -61,11 +66,17 @@ const Homepage = () => {
 
   const handleAddToCart = (item) => {
     setAddedCarts(prev => prev + 1);
-    setModalItem(item);
+    setModalItem(item.title);
     setModal(true);
+
     setTimeout(() => {
       setModal(false);
     }, 2000);
+
+    setAddedItemCarts((prev) => [...prev, {
+      title: item.title,
+      price: item.price
+    }]);
   };
 
   return (
@@ -75,12 +86,15 @@ const Homepage = () => {
       searchBarOnchange={(e) => setSearchProduct(e.target.value)}
       badgeCL={addedCarts === 0 ? "hidden" : "block"}
       carts={addedCarts}
+      cartOnClick={() => {
+        setOpenCartList(!openCartList);
+      }}
     />
 
     <div className='p-5 lg:px-20 flex flex-col gap-10 items-center'>
       
       {/* CATEGORY */}
-      <div className='flex flex-col sm:flex-row justify-between shadow-[0_0_3px_0_gray] rounded-md p-2 gap-2 w-full text-xs md:text-sm'>
+      <div className='flex flex-col sm:flex-row justify-between shadow-[0_0_2px_0_gray] rounded-md p-2 gap-2 w-full text-xs md:text-sm'>
         <div className='w-fit flex gap-3'>
           <label htmlFor="item-category">Category</label>
           <select 
@@ -154,7 +168,10 @@ const Homepage = () => {
                 stocks={product.stock}
                 rating={product.rating}
                 productOnClick={() => {
-                  handleAddToCart(product.title);
+                  handleAddToCart({
+                    title: product.title,
+                    price: (product.price - (product.price * (product.discountPercentage / 100))).toFixed(2),
+                  });
                 }}
               />
             ))
@@ -171,6 +188,7 @@ const Homepage = () => {
           pageOnClick={() => window.scrollTo({top: 0, behavior: "smooth"})}
         />
       </div>
+
     </div>
 
     {
@@ -180,6 +198,23 @@ const Homepage = () => {
         modalBtnOnClick={() => setModal(!modal)}
       />
     }
+
+     {
+      openCartList &&
+      <CartList 
+        cartListOnClickBtn={() => setOpenCartList(false)}
+        itemList={addedItemCarts.map((items, index) => (
+          <div>
+            <div key={index} className='flex justify-between'>
+              <h1 className='font-semibold'>{items.title}</h1>
+              <p className='font-semibold'>${items.price}</p>
+            </div>
+
+            <hr className='text-gray-300 my-1'/>
+          </div>
+        ))}
+      />
+     }
     </>
   )
 }
