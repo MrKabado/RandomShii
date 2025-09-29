@@ -24,12 +24,16 @@ const CartList = (props) => {
         {props.itemList}
       </div>
 
-      <button 
-        className='px-2 bg-black text-white rounded-sm cursor-pointer hover:bg-gray-700'
-        onClick={props.checkOutBtnOnClick}
-      >
-        Check Out
-      </button>
+      <div className='flex justify-between w-full px-4'>
+        <h1>Total Price: </h1>
+
+        <button 
+          className='px-2 bg-black text-white rounded-sm cursor-pointer hover:bg-gray-700'
+          onClick={props.checkOutBtnOnClick}
+        >
+          Check Out
+        </button>
+      </div>
     </div>
     </>
   )
