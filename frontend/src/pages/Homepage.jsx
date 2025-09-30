@@ -7,6 +7,7 @@ import CartList from '../components/modal/CartList'
 import { MinusCircleIcon, ExclamationCircleIcon, CheckCircleIcon } from '@heroicons/react/24/solid'
 import CheckOut from '../components/modal/CheckOut'
 import ReusableAlert from '../components/modal/ReusableAlert'
+import ProductDescription from '../components/modal/ProductDescription'
 
 const Homepage = () => {
   const [products, setProducts] = useState([]);
@@ -24,7 +25,6 @@ const Homepage = () => {
   const [modalItem, setModalItem] = useState("");
   const [openCartList, setOpenCartList] = useState(false); //opening to CartList
 
-  const [itemQuantity, setItemQuantity] = useState([]);
   const [addedItemCarts, setAddedItemCarts] = useState([]); //holder for added items
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -36,6 +36,10 @@ const Homepage = () => {
   const [address, setAddress] = useState("");
 
   const [alertType, setAlertType] = useState("error");
+
+  const [openProductDescription, setOpenProductDescription] = useState(false);
+  const [clickedProduct, setClickedProduct] = useState([]);
+
 
 
   
@@ -130,7 +134,7 @@ const Homepage = () => {
       setName("");
       setContactNo("");
       setAddress("");
-    }, 2000);
+    }, 4000);
   }
 
   return (
@@ -221,6 +225,10 @@ const Homepage = () => {
                 discountedPrice={`$${(product.price - (product.price * (product.discountPercentage / 100))).toFixed(2)}`}
                 stocks={product.stock}
                 rating={product.rating}
+                productDivOnClick={() => {
+                  setClickedProduct(product);
+                  setOpenProductDescription(true);           
+                }}
                 productOnClick={() => {
                   handleAddToCart({
                     title: product.title,
@@ -372,11 +380,51 @@ const Homepage = () => {
       <ReusableAlert 
         modalBtnOnClick={() => setOpenReusableAlert(false)}
         icon={
-          alertType === "error" ? <ExclamationCircleIcon className='w-6 text-[#FC8181]'/> : <CheckCircleIcon className='w-6 text-green-500'/>
+          alertType === "error" ? <ExclamationCircleIcon className='w-6 text-[#FC8181]'/> : <CheckCircleIcon className='w-6 text-green-700'/>
         }
-        className={alertType === "error" ? "z-[9999] bg-[#FFF5F5] border-[#FC8181] border-1" : "z-[9999] bg-green-100 border-green-300 border-1"}
-        alertText={alertType === "error" ? "Please fill out all required fields." : `Thank you, ${name} Your order has been placed successfully.`}
-        alertTextCL={alertType === "error" ? "text-[#D03030]" : "text-green-500"}
+        className={alertType === "error" ? "z-[9999] bg-[#FFF5F5] border-[#FC8181] border-1" : "z-[9999] bg-green-50 border-green-300 border-1"}
+        alertText={alertType === "error" ? "Please fill out all required fields." : <>Thank you, <strong>{name}</strong> Your order has been placed successfully.</>}
+        alertTextCL={alertType === "error" ? "text-[#D03030]" : "text-green-700"}
+        xIconCL={alertType === "error" ? "text-[#D03030]" : "text-green-900"}
+      />
+     }
+
+     {
+      openProductDescription &&
+      <ProductDescription 
+        checkOutCloseBtnOnClick={() => {
+          setOpenProductDescription(false);
+          setClickedProduct();
+        }}
+        productImage={clickedProduct.thumbnail}
+        productTitle={clickedProduct.title}
+        productBrand={clickedProduct.brand}
+        productCategory={clickedProduct.category}
+        ProductDescription={clickedProduct.description}
+        productPriceFinal={(clickedProduct.price - (clickedProduct.price * (clickedProduct.discountPercentage / 100))).toFixed(2)}
+        productPrice={clickedProduct.price}
+        productPercentage={clickedProduct.discountPercentage}
+        productStock={clickedProduct.stock}
+        productRating={clickedProduct.rating}
+        productSKU={clickedProduct.sku}
+        productWeight={clickedProduct.weight}
+        productWidth={clickedProduct.dimensions.width}
+        productHeight={clickedProduct.dimensions.height}
+        productDepth={clickedProduct.dimensions.depth}
+        productWarranty={clickedProduct.warrantyInformation}
+        productShipping={clickedProduct.shippingInformation}
+        productStatus={clickedProduct.availabilityStatus}
+        productReturnPolicy={clickedProduct.returnPolicy}
+        productRating1={clickedProduct.reviews[0].rating}
+        productComment1={clickedProduct.reviews[0].comment}
+        productReviewerName1={clickedProduct.reviews[0].reviewerName}
+        productRating2={clickedProduct.reviews[1].rating}
+        productComment2={clickedProduct.reviews[1].comment}
+        productReviewerName2={clickedProduct.reviews[1].reviewerName}
+        productRating3={clickedProduct.reviews[2].rating}
+        productComment3={clickedProduct.reviews[2].comment}
+        productReviewerName3={clickedProduct.reviews[2].reviewerName}
+        productQr={clickedProduct.meta.qrCode}
       />
      }
 

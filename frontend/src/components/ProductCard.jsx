@@ -2,11 +2,16 @@ import React from 'react'
 
 const ProductCard = (props) => {
   return (
-    <div title='product description' className='flex flex-col justify-between shadow-[0_0_2px_0_gray] rounded-lg items-center p-4 gap-3 cursor-pointer transition hover:scale-[1.02] hover:bg-gray-100'>
+    <div 
+      title='product description' 
+      className='flex flex-col justify-between shadow-[0_0_2px_0_gray] rounded-lg items-center p-4 gap-3 cursor-pointer transition hover:scale-[1.02]'
+    >
+      
       <img 
         src={props.image} 
         alt="Product1" 
         className='w-50'
+        onClick={props.productDivOnClick}
         />
 
       <div className='flex flex-col text-xs md:text-sm w-full'>

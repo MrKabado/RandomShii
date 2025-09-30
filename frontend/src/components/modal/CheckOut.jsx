@@ -1,7 +1,5 @@
 import React from 'react'
-import { useState } from 'react';
-import { XMarkIcon, CreditCardIcon, ExclamationCircleIcon } from "@heroicons/react/24/solid";
-import ReusableAlert from './ReusableAlert';
+import { XMarkIcon, CreditCardIcon } from "@heroicons/react/24/solid";
 
 const CheckOut = (props) => {
   return (
