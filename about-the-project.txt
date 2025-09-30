@@ -1,0 +1,10 @@
+Project Functions sa random shi
+
+1. Search
+2. Category by Brands, set Minimum Price & Maximum Price, and can be Sorted by Ascending or Disascending
+3. Pwede add to cart, show how many items you've added (badge), can view the added items to carts, like lista sa mga na add nimo na items
+4. Makita total price sa imo items
+5. Maka delete og item sa carts og mo minus sad iya total price
+6. Pwede ma check out, naay modal para ana sad, then naay fill-up2 (laylay) nya lay2 validation if walay sud, nya list sa items og total price nya ma place order
+7. Alert notif every add to cart and after clicking place order and if walay input ang name contacts address
+8. Last naay product description if you clicked the image of the specific items. try addan og add to cart og checkout button sunod.
