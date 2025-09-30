@@ -123,6 +123,14 @@ const Homepage = () => {
     setAlertType("success");
     setOpenReusableAlert(true);
     setOpenCheckOut(false);
+    setTotalPrice(0);
+
+    setTimeout(() => {
+      setOpenReusableAlert(false);
+      setName("");
+      setContactNo("");
+      setAddress("");
+    }, 2000);
   }
 
   return (
@@ -362,11 +370,12 @@ const Homepage = () => {
      {
       openReusableAlert &&
       <ReusableAlert 
+        modalBtnOnClick={() => setOpenReusableAlert(false)}
         icon={
           alertType === "error" ? <ExclamationCircleIcon className='w-6 text-[#FC8181]'/> : <CheckCircleIcon className='w-6 text-green-500'/>
         }
         className={alertType === "error" ? "z-[9999] bg-[#FFF5F5] border-[#FC8181] border-1" : "z-[9999] bg-green-100 border-green-300 border-1"}
-        alertText={alertType === "error" ? "Please fill out all required fields." : "Successfully Added"}
+        alertText={alertType === "error" ? "Please fill out all required fields." : `Thank you, ${name} Your order has been placed successfully.`}
         alertTextCL={alertType === "error" ? "text-[#D03030]" : "text-green-500"}
       />
      }
